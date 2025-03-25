@@ -1,13 +1,14 @@
 import pytest
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
+from utility.logger import setup_logger
 
-@pytest.fixture(scope="class")
-def setup(request,browser):
+
+@pytest.fixture(scope="class",autouse=True)
+def setup(request,browser="chrome"):
     driver = None
     if "chrome"==browser:
         option = webdriver.ChromeOptions()
@@ -33,3 +34,8 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="class")
 def browser(request):
     return request.config.getoption("--browser")
+
+@pytest.fixture(scope="session", autouse=True)
+def logger():
+    logger = setup_logger()
+    return logger
